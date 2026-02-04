@@ -1,52 +1,39 @@
 import os
 from trie import Trie
 
-# Leer el diccionario
-print("="*70)
-print("INSTANCIANDO TRIE CON DICCIONARIO")
-print("="*70)
-
+# Cargar diccionario
 trie = Trie()
 
-# Obtener la ruta del directorio donde está el script
 script_dir = os.path.dirname(os.path.abspath(__file__))
 diccionario_path = os.path.join(script_dir, 'diccionario.txt')
 
-# Cargar palabras del diccionario
 with open(diccionario_path, 'r', encoding='utf-8') as f:
     palabras = [linea.strip().lower() for linea in f if linea.strip()]
 
-print(f"\n✓ Diccionario cargado: {len(palabras)} palabras")
-
-# Insertar todas las palabras
 for palabra in palabras:
     trie.insert(palabra)
 
-print(f"✓ Trie poblado exitosamente")
+print("AUTOCOMPLETADO - MOTOR DE BUSQUEDA")
+print("-" * 40)
 
-# Pruebas de búsqueda exacta
-print("\n" + "="*70)
-print("PRUEBAS DE BÚSQUEDA EXACTA (search)")
-print("="*70)
-
-palabras_test_search = ["de", "la", "python", "gato", "mundo"]
-for palabra in palabras_test_search:
-    existe = trie.search(palabra)
-    print(f"  search('{palabra}'): {existe}")
-
-# Pruebas de autocompletado
-print("\n" + "="*70)
-print("PRUEBAS DE AUTOCOMPLETADO (autocomplete)")
-print("="*70)
-
+# Prefijos predefinidos
 prefijos_test = ["es", "ti", "mu", "p", "v", "a"]
+print("Pruebas predefinidas:\n")
 for prefijo in prefijos_test:
-    resultados = trie.autocomplete(prefijo)[:10]  # Mostrar solo los primeros 10
-    
-    print(f"\n  Prefijo '{prefijo}':")
-    if resultados:
-        print(f"    {resultados}")
-    else:
-        print(f"    Sin resultados")
+    resultados = trie.autocomplete(prefijo)[:10]
+    print(f"Prefijo '{prefijo}': {resultados}")
 
-print("\n" + "="*70)
+# Entrada del usuario
+print("\n" + "-" * 40)
+print("Ingresa prefijos (escribe 'salir' para terminar):\n")
+while True:
+    prefijo = input("Prefijo: ").strip().lower()
+    if prefijo == "salir":
+        break
+    if prefijo:
+        resultados = trie.autocomplete(prefijo)
+        print(f"Resultados para '{prefijo}': {resultados[:20]}")
+        if len(resultados) > 20:
+            print(f"(Total: {len(resultados)} palabras)\n")
+        else:
+            print()
