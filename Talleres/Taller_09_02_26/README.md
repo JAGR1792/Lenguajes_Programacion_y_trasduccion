@@ -31,7 +31,28 @@ Representación Lógica del sumador.
 
 ![Diagrama del sumador debits con compuertas logicas](Imagenes/Sumador_bits.jpeg)
 
+Sumador completo (equivalente al bloque del diagrama):
+
+```python
+def sumador_completo(a, b, acarreo_entrada):
+	suma_1 = compuerta_xor(a, b)
+	bit_suma = compuerta_xor(suma_1, acarreo_entrada)
+	acarreo_salida = compuerta_or(
+		compuerta_and(a, b), compuerta_and(acarreo_entrada, suma_1)
+	)
+	return bit_suma, acarreo_salida
+```
+
 Este circuito corresponde únicamente a un sumador de un bit. Sin embargo, es posible extender su funcionamiento para que actúe también como un sumador–restador de un bit, interpretando la resta como una operación de suma. Para lograr esto, se utiliza el complemento a dos de los números binarios, ya que este método permite representar y operar correctamente con números con signo.
+
+
+
+
+
+
+
+
+
 
 
 ## Fundamentos teoricos
@@ -40,7 +61,7 @@ Un bit es la unidad minima de informacion y toma valores 0 o 1. Un numero de
 4 bits se representa con cuatro bits fijos (por ejemplo, 0101).
 
 Las compuertas logicas usadas son AND, OR y NOT. A partir de ellas se define
-XOR mediante la equivalencia:
+XOR mediante la equivalencia (vista como codigo):
 
 ```
 XOR(A, B) = (A OR B) AND NOT (A AND B)
@@ -91,19 +112,64 @@ S=0 y produce acarreo (C_out=1).
 Caso A=1, B=1, C_in=1: tres unos equivalen a 3 en decimal, que en 2 bits es
 11, por lo tanto S=1 y C_out=1.
 
-La resta se implementa con complemento a dos. Para calcular $A - B$, primero
-se obtiene el complemento a dos de $B$: se invierten sus bits (NOT) y luego
-se suma 1. Ese valor se suma a $A$ con el mismo sumador de 4 bits. El bit de
+La resta se implementa con complemento a dos. Para calcular A - B, primero
+se obtiene el complemento a dos de B: se invierten sus bits (NOT) y luego
+se suma 1. Ese valor se suma a A con el mismo sumador de 4 bits. El bit de
 acarreo final se interpreta como indicacion de prestamo: si es 1, la resta no
 requiere prestamo (resultado no negativo en 4 bits); si es 0, el resultado es
 negativo en representacion de 4 bits.
 
-En complemento a dos de 4 bits, el rango representable es $[-8, 7]$. Para
-obtener $-B$ se toma el complemento a dos de $B$ y se descarta cualquier
-acarreo de quinto bit. Por ejemplo, si $B = 0011$ entonces su complemento a
-uno es $1100$ y al sumar 1 se obtiene $1101$, que representa $-3$ en 4 bits.
+En complemento a dos de 4 bits, el rango representable es [-8, 7]. Para
+obtener -B se toma el complemento a dos de B y se descarta cualquier
+acarreo de quinto bit. Por ejemplo, si B = 0011 entonces su complemento a
+uno es 1100 y al sumar 1 se obtiene 1101, que representa -3 en 4 bits.
 Este principio permite reutilizar el mismo sumador para la resta, ya que
-$A - B = A + (\text{comp2}(B))$.
+A - B = A + comp2(B).
+
+## Del diagrama a Python (extractos clave)
+
+La implementacion respeta el diagrama de compuertas y muestra el mismo
+flujo logico en codigo. Estos fragmentos resumen la idea:
+
+Compuertas basicas y XOR (como en el diagrama):
+
+```python
+def compuerta_and(a, b):
+	return 1 if (a and b) else 0
+
+def compuerta_or(a, b):
+	return 1 if (a or b) else 0
+
+def compuerta_not(a):
+	return 0 if a else 1
+
+def compuerta_xor(a, b):
+	return compuerta_and(compuerta_or(a, b), compuerta_not(compuerta_and(a, b)))
+```
+
+
+Recorrido de los 4 bits :
+
+```python
+def sumar_4_bits(a_bits, b_bits, acarreo_entrada=0):
+	resultado = [0, 0, 0, 0]
+	acarreo = acarreo_entrada
+	for i in range(3, -1, -1):  # recorremos del menos significativo a el más
+		resultado[i], acarreo = sumador_completo(a_bits[i], b_bits[i], acarreo)
+	return resultado, acarreo
+```
+
+Se recorre de derecha a izquierda porque el bit menos significativo genera el
+primer acarreo, y ese acarreo debe propagarse hacia los bits mas significativos.
+
+Resta con complemento a dos (mismo camino logico del sumador):
+
+```python
+def restar_4_bits(a_bits, b_bits):
+	b_invertido = [compuerta_not(b) for b in b_bits]
+	resultado, acarreo = sumar_4_bits(a_bits, b_invertido, acarreo_entrada=1)
+	return resultado, acarreo
+```
 
 ## Ejemplos numericos
 
