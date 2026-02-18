@@ -9,6 +9,8 @@
 "-" { return SUB; }
 "*" { return MUL; }
 "/" { return DIV; }
+"&&" { return AND; }
+"||" { return OR; }
 "|" { return ABS; }
 "(" { return OP; }
 ")" { return CP; }

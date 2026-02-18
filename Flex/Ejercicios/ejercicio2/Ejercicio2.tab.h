@@ -60,9 +60,11 @@ extern int yydebug;
     MUL = 261,                     /* MUL  */
     DIV = 262,                     /* DIV  */
     ABS = 263,                     /* ABS  */
-    EOL = 264,                     /* EOL  */
-    OP = 265,                      /* OP  */
-    CP = 266                       /* CP  */
+    AND = 264,                     /* AND  */
+    OR = 265,                      /* OR  */
+    EOL = 266,                     /* EOL  */
+    OP = 267,                      /* OP  */
+    CP = 268                       /* CP  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -75,7 +77,7 @@ union YYSTYPE
 
     int ival;
 
-#line 79 "Ejercicio2.tab.h"
+#line 81 "Ejercicio2.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
