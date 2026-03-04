@@ -1,0 +1,3 @@
+primera linea
+#include "inc_a.txt"
+tercera linea

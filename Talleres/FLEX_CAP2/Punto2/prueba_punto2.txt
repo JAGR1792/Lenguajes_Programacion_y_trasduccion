@@ -1,0 +1,8 @@
+Casa casa CASA cAsA
+The the THE to TO and AND
+can't CAN'T Can't
+Compiler compiler COMPILER
+Flex FLEX flex
+Token token TOKEN
+Linea uno.
+Linea dos con Casa y compiler.

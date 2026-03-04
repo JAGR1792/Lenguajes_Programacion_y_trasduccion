@@ -46,3 +46,10 @@ htmlcov/
 # Lo que envio al teams
 *.zip
 *.rar
+*.pdf
+*.docx
+*.xlsx
+*.pptx
+*.jpg
+*.jpeg
+*.png
